@@ -1,9 +1,10 @@
 package com.outliers.prop2yml.trie;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Node {
-    public ArrayList<Node> children;
+    private Map<String, Node> children;
     private String key;
     private String value;
     private boolean isLeaf;
@@ -11,17 +12,13 @@ public class Node {
     Node(String key) {
         this.key = key;
         this.isLeaf = false;
-        this.children = new ArrayList<Node>();
+        this.children = new HashMap<>();
     }
 
-    Node findChild(String value) {
-        if (children != null) {
-            for (Node n : children) {
-                if (n.getKey().equals(value)) {
-                    return n;
-                }
-            }
-        }
+    Node findChild(String key) {
+        if (children != null)
+            return children.get(key);
+
         return null;
     }
 
@@ -46,8 +43,27 @@ public class Node {
     }
 
     Node addChild(String value) {
-        Node n = new Node(value);
-        children.add(n);
-        return n;
+        if (value == null || value.isEmpty())
+            throw new IllegalArgumentException();
+
+        Node newNode = new Node(value);
+        children.put(value, newNode);
+
+        return newNode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Node node = (Node) o;
+
+        return getKey().equals(node.getKey());
+    }
+
+    @Override
+    public int hashCode() {
+        return getKey().hashCode();
     }
 }
