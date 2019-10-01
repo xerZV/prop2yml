@@ -22,20 +22,20 @@ public class Node {
         return null;
     }
 
-    String getKey() {
+    public String getKey() {
         return key;
     }
 
-    String getValue() {
-        return value;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     void setValue(String value) {
         this.value = value;
     }
 
-    boolean isLeaf() {
-        return isLeaf;
+    public String getValue() {
+        return value;
     }
 
     void setLeaf(boolean leaf) {
@@ -50,6 +50,18 @@ public class Node {
         children.put(value, newNode);
 
         return newNode;
+    }
+
+    public boolean isLeaf() {
+        return isLeaf;
+    }
+
+    public Map<String, Node> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Map<String, Node> children) {
+        this.children = children;
     }
 
     @Override

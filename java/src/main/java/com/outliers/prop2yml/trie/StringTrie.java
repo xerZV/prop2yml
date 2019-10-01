@@ -125,6 +125,11 @@ public class StringTrie implements Trie {
         return this;
     }
 
+    @Override
+    public Node getRoot() {
+        return this.root;
+    }
+
     private void assertKeyNotNullAndNotEmpty(String key) {
         if (key == null || key.isEmpty())
             throw new IllegalArgumentException("The key cannot be null or empty");

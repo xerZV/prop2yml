@@ -21,4 +21,6 @@ public interface Trie {
     int size();
 
     StringTrie of(Map<String, String> map);
+
+    Node getRoot();
 }

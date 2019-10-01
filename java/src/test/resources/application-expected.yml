@@ -1,0 +1,29 @@
+app:
+  message: This is the primary app prop for ${spring.application.name}
+spring:
+  application:
+    name: Prop2Yml
+  data:
+    rest:
+      basePath: /api
+  profiles:
+    active: dev
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      exclude: static/**,public/**
+    remote:
+      restart:
+        enabled: true
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    enabled: true
+server:
+  port: 7777
+  servlet:
+    session:
+      timeout: 90m
+version: 0.0.1
