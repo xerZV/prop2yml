@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -20,14 +19,16 @@ import java.util.stream.Collectors;
 public class Prop2YmlConverterImpl implements Prop2YmlConverter {
     private static final String NEW_LINE = "\n";
     private static final char PUNCTUATION_COLON = ':';
+    private static final String EMPTY_STRING = "";
+    private static final String WHITESPACE = " ";
+    private static final String YML_EXTENSION = ".yml";
+    private static final String PROPERTIES_EXTENSION = ".properties";
     private static Prop2YmlConverterImpl INSTANCE = null;
-    private static String EMPTY_STRING = "";
-    private static String WHITESPACE = " ";
 
     private Prop2YmlConverterImpl() {
     }
 
-    static Prop2YmlConverterImpl getInstance() {
+    synchronized static Prop2YmlConverterImpl getInstance() {
         if (INSTANCE == null)
             INSTANCE = new Prop2YmlConverterImpl();
 
@@ -35,13 +36,17 @@ public class Prop2YmlConverterImpl implements Prop2YmlConverter {
     }
 
     @Override
-    public void convert(File file) throws IOException {
+    public void convert(final File file) throws IOException {
         Trie trie = Trie.stringTrie().of(buildPropertiesMap(file));
         String ymlSource = convertTrieToYmlStringSource(trie);
 
         //TODO Decide what the result should be
         // This is for test purpose only
-        Files.writeString(new File(file.getParent() + File.separator + "application.yml").toPath(), ymlSource);
+        Files.writeString(new File(generateNewFileName(file)).toPath(), ymlSource);
+    }
+
+    private String generateNewFileName(final File file) {
+        return String.format("%s%s%s%s", file.getParent(), File.separator, file.getName().replace(PROPERTIES_EXTENSION, EMPTY_STRING), YML_EXTENSION);
     }
 
     private String convertTrieToYmlStringSource(Trie trie) {
@@ -52,7 +57,7 @@ public class Prop2YmlConverterImpl implements Prop2YmlConverter {
         StringBuilder sb = new StringBuilder();
 
         if (level > 0) { // skip the root node, because its empty
-            sb.append(generateWhitespaces(level - 1)).append(node.getKey()).append(PUNCTUATION_COLON);
+            sb.append(generateWhitespaces(level == 1 ? 0 : (level - 1) * 2)).append(node.getKey()).append(PUNCTUATION_COLON);
 
             if (node.isLeaf()) { // if the node is leaf have to append whitespace before the value
                 sb.append(' ').append(node.getValue()).append(NEW_LINE);
@@ -75,7 +80,7 @@ public class Prop2YmlConverterImpl implements Prop2YmlConverter {
      * @return
      */
     private String generateWhitespaces(int times) {
-        return String.join(EMPTY_STRING, Collections.nCopies(times, WHITESPACE));
+        return WHITESPACE.repeat(times);
     }
 
     /**

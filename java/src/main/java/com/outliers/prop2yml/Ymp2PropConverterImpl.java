@@ -15,7 +15,7 @@ public class Ymp2PropConverterImpl implements Yml2PropConverter {
     private Ymp2PropConverterImpl() {
     }
 
-    static Ymp2PropConverterImpl getInstance() {
+    synchronized static Ymp2PropConverterImpl getInstance() {
         if (INSTANCE == null)
             INSTANCE = new Ymp2PropConverterImpl();
 

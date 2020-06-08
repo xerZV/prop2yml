@@ -26,4 +26,6 @@ server:
   servlet:
     session:
       timeout: 90m
+  ssl:
+    protocol: TLS # SSL protocol to use.
 version: 0.0.1
